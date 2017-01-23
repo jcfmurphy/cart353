@@ -33,7 +33,7 @@ void setup() {
   cooper = createFont("CooperHewitt-BookItalic.otf", 40);
 
   //set the instructions string
-  instructions = "Click the image to switch backgrounds. Click the buttons below to select effects.";
+  instructions = "Click the image to switch backgrounds. Click the buttons below to select effects. Press Enter to save the image.";
 
   //initialize the heads-up display
   hud = new Hud();
