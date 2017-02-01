@@ -16,7 +16,7 @@ The z-position of each cube is determined using Perlin noise.
 
 import processing.video.*;
 
-//ratio between window size and video resolution
+//ratio between number of video pixels and the size of the cubes in pixels
 int videoScale;
 
 //number of pixels in the video
