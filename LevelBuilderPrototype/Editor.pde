@@ -71,25 +71,42 @@ class Editor {
   void fillGridSquare() {
 
     //get the gridSquare to be filled
-    GridSquare fillSquare = getGridSquare(mouseX + cameraOffset, mouseY);
+    GridSquare fillSquare = findGridSquare(mouseX + cameraOffset, mouseY);
 
     //if the selectedSprite is the unicorn... 
-    if (selectedSprite.spriteNum == 1) {
+    if (selectedSprite.getSpriteNum() == 1) {
 
       //check all GridSquares
       for (GridSquare g : editor.gridSquares) {
         //empty other unicorn GridSquares
-        if (g.sprite.spriteNum == 1) {
-          g.sprite = sprites[0];
+        if (g != fillSquare) {
+          if (g.getSprite().getSpriteNum() == 1) {
+            g.setSprite(sprites[0]);
+          }
         }
         //empty the GridSquare below the one being filled
         if (g.position.x == fillSquare.position.x && g.position.y == fillSquare.position.y + gridSize) {
-          g.sprite = sprites[0];
+          g.setSprite(sprites[0]);
+        }
+      }
+    } else {
+      //Get the gridSquare above and check if it contains the unicorn sprite...
+      if (mouseY >= 100) {
+        GridSquare aboveSquare = findGridSquare(mouseX + cameraOffset, mouseY - gridSize);
+        if (aboveSquare.getSprite().getSpriteNum() == 1) {
+          aboveSquare.setSprite(sprites[0]);
+          pop.trigger();
         }
       }
     }
-    //set the gridSquare's sprite to the current selection
-    fillSquare.setSprite(selectedSprite);
+
+    //if the selected sprite is different from the current sprite in the gridSquare...
+    if (selectedSprite.getSpriteNum() != fillSquare.getSprite().getSpriteNum()) {
+      //set the gridSquare's sprite to the current selection
+      fillSquare.setSprite(selectedSprite);
+      //play a sound
+      pop.trigger();
+    }
   }
 
 
@@ -106,7 +123,7 @@ class Editor {
 
 
   //method to find the gridSquare at a position
-  GridSquare getGridSquare(float x, float y) {
+  GridSquare findGridSquare(float x, float y) {
     GridSquare returnSquare = null;
 
     //check all gridSquares
@@ -149,5 +166,37 @@ class Editor {
         }
       }
     }
+  }
+
+
+  //method to move the editor window camera to the left
+  void cameraLeft() {
+    if (editor.cameraOffset >= 100) {
+      editor.cameraOffset -= 100;
+    }
+  }
+
+
+  //method to move the editor window camera to the right
+  void cameraRight() {
+    if (editor.cameraOffset < mapWidth - editorWidth) {
+      editor.cameraOffset += 100;
+    }
+  }
+
+  int getMapWidth() {
+    return mapWidth;
+  }
+
+  PVector getOrigin() {
+    return origin;
+  }
+
+  int getEditorWidth() {
+    return editorWidth;
+  }
+  
+  int getCameraOffset() {
+    return cameraOffset;
   }
 }

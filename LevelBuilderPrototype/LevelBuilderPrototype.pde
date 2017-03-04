@@ -3,8 +3,10 @@
 This is the prototype for the Ammunicorn Level Builder.
  Use the mouse to select tiles and place them in the editor grid.
  Press the 's' key to save the map as a JSON file.
- Use the '+' buttons on the left and right of the map editor window
- to extend the map to the left or right.
+ The up key extends the map to the right.
+ The down key cuts off a map column on the right.
+ The left key moves the map camera left.
+ The right key moves the map camera right.
  */
 
 
@@ -22,15 +24,13 @@ Editor editor;
 //Declare the heads-up display
 Hud hud;
 
-//the erase button image
-PImage eraseImage;
-
 //the size of the grid for sprite placement
 int gridSize = 100;
 
 //Declare minim variable and audio variables
 Minim minim;
 AudioSample buttonClick;
+AudioSample pop;
 
 //create an array of sprites
 Sprite[] sprites;
@@ -59,12 +59,10 @@ void setup() {
   editor = new Editor();
   hud = new Hud();
 
-  //load the erase image
-  eraseImage= loadImage("erase.png");
-
   //load buttonClick audio sample
   minim = new Minim(this);
   buttonClick = minim.loadSample("buttonClick.wav", 512);
+  pop = minim.loadSample("pop.wav", 512);
 
   //set the selected sprite
   selectedSprite = sprites[0];
@@ -104,7 +102,21 @@ void mouseDragged() {
 
 
 void keyPressed() {
-  if (key == 's' || key == 'S') {
+  if (key == CODED) {
+    if (keyCode == LEFT) {
+      //left key moves camera left      
+      editor.cameraLeft();
+    } else if (keyCode == RIGHT) {
+      //right key moves camera right
+      editor.cameraRight();
+    } else if (keyCode == UP) {
+      //up key extends the map
+      editor.extendMap();
+    } else if (keyCode == DOWN) {
+      //down key cuts a column off the right side of the map
+      editor.cutMap();
+    }
+  } else if (key == 's' || key == 'S') {
     saveMap();
   }
 }

@@ -24,5 +24,10 @@ class Sprite {
     imageMode(CORNER);
     image(spriteImage, x, y);
   }
+  
+  
+  int getSpriteNum() {
+    return spriteNum;
+  }
 
 }

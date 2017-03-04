@@ -15,7 +15,7 @@ class Hud {
   Button[] buttons;
 
   //button images
-  PImage left, right, plus, minus;
+  PImage left, right, plus, minus, erase;
 
 
   /*----------------------------------- Methods ----------------------------------------*/
@@ -27,10 +27,11 @@ class Hud {
     right = loadImage("right.png");
     plus = loadImage("plus.png");
     minus = loadImage("minus.png");
+    erase = loadImage("erase.png");
 
     //fill buttons array
     buttons = new Button[9];
-    buttons[0] = new Button(0, 0, sprites[0]);
+    buttons[0] = new Button(0, 0, 150, 150, erase);
     buttons[1] = new Button(0, 150, sprites[1]);
     buttons[2] = new Button(0, 400, sprites[2]);
     buttons[3] = new Button(0, 550, sprites[3]);
@@ -55,6 +56,15 @@ class Hud {
     for (Button b : buttons) {
       b.display();
     }
+
+    //write the current mapWidth on the editor window
+    fill(200, 150);
+    textFont(bungee);
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    float textX = editor.getOrigin().x + (editor.getEditorWidth() * 0.5);
+    String text = "Map Width: " + editor.getMapWidth() + "   Camera Offset: " + editor.getCameraOffset();
+    text(text, textX, 50);
   }
 
 
@@ -73,34 +83,39 @@ class Hud {
     switch(buttonIndex) {
     case 0:
       selectedSprite = sprites[buttonIndex];
+      buttonClick.trigger();
       break;
     case 1:
       selectedSprite = sprites[buttonIndex];
+      buttonClick.trigger();
       break;
     case 2:
       selectedSprite = sprites[buttonIndex];
+      buttonClick.trigger();
       break;
     case 3:
       selectedSprite = sprites[buttonIndex];
+      buttonClick.trigger();
       break;
     case 4:
       selectedSprite = sprites[buttonIndex];
+      buttonClick.trigger();
       break;
     case 5:
-      if (editor.cameraOffset >= 100) {
-        editor.cameraOffset -= 100;
-      }
+      editor.cameraLeft();
+      buttonClick.trigger();
       break;
     case 6:
-      if (editor.cameraOffset < editor.mapWidth - editor.editorWidth) {
-        editor.cameraOffset += 100;
-      }
+      editor.cameraRight();
+      buttonClick.trigger();
       break;
     case 7:
       editor.extendMap();
+      buttonClick.trigger();
       break;
     case 8:
       editor.cutMap();
+      buttonClick.trigger();
       break;
     }
   }
