@@ -18,7 +18,7 @@ class Editor {
 
   /*----------------------------------- Methods ----------------------------------------*/
 
-  //Constructor
+  //Constructor for creating a new map
   Editor() {
 
     //Initialize and fill arraylist of gridSquares
@@ -32,9 +32,27 @@ class Editor {
 
     //start the map at the same width as the editor window
     mapWidth = editorWidth;
+    
     //start with the camera offset at zero
     cameraOffset = 0;
   }
+
+  //Constructor for loading a map from a JSON file
+  Editor(String fileName) {
+
+    //Initialize arraylist of gridSquares
+    gridSquares = new ArrayList<GridSquare>();
+
+    //load the map
+    loadMap(fileName);
+
+    //set the mapWidth based on the size of the gridSquares arrayList
+    mapWidth = gridSquares.size() * 10;
+    
+    //start with the camera offset at zero
+    cameraOffset = 0;
+  }
+
 
   //method to display the editor window
   void display() {
@@ -184,6 +202,59 @@ class Editor {
     }
   }
 
+
+  //function to save the map to a JSON file
+  void saveMap() {
+    //create a JSONArray to hold the gridsquares
+    JSONArray jsonGridSquares = new JSONArray();
+
+    //fill the JSONArray
+    for (int i = 0; i < editor.gridSquares.size(); i++) {
+
+      //get the gridSquare
+      GridSquare tempSquare = editor.gridSquares.get(i);
+
+      //create a new JSONObject and fill it with gridSquare info
+      JSONObject jGridSquare = new JSONObject();
+      jGridSquare.setFloat("x", tempSquare.position.x);
+      jGridSquare.setFloat("y", tempSquare.position.y);
+      if (tempSquare.sprite != null) {
+        jGridSquare.setInt("spriteNum", tempSquare.sprite.spriteNum);
+      } else {
+        jGridSquare.setInt("spriteNum", 0);
+      }
+
+      //add the JSONObject to the JSONArray
+      jsonGridSquares. setJSONObject(i, jGridSquare);
+    }
+
+    saveJSONArray(jsonGridSquares, "data/gridSquares" + hour() + ";" + minute() + ";" + second() + ".json");
+  }
+
+
+  //function to load a map from a JSON file
+  void loadMap(String fileName) {
+    //create a JSONArray to hold the map
+    JSONArray mapArray = new JSONArray();
+    //fill the mapArray from the JSON file using the fileName
+    mapArray = loadJSONArray(fileName);
+
+    //create the individual gridSquare from each JSONObject
+    for (int i = 0; i < mapArray.size(); i++) {
+      //load the JSON object
+      JSONObject jsonSquare = mapArray.getJSONObject(i);
+      
+      //unpack the variables
+      float jsonX = jsonSquare.getFloat("x");
+      float jsonY = jsonSquare.getFloat("y");
+      int jsonNum = jsonSquare.getInt("spriteNum");
+      
+      //Create a new gridSquare and add it to the listArray
+      gridSquares.add(new GridSquare(jsonX, jsonY, sprites[jsonNum]));
+    }
+  }
+
+
   int getMapWidth() {
     return mapWidth;
   }
@@ -195,7 +266,7 @@ class Editor {
   int getEditorWidth() {
     return editorWidth;
   }
-  
+
   int getCameraOffset() {
     return cameraOffset;
   }

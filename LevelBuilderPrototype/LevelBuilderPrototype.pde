@@ -55,8 +55,13 @@ void setup() {
   sprites[3] = new Sprite(3, "green_0.png");
   sprites[4] = new Sprite(4, "blue_0.png");
 
-  //instantiate editor window and hud
+  //instantiate editor window with an empty map
   editor = new Editor();
+
+  ////instantiate editor window with a map loaded from a JSON file
+  //editor = new Editor("gridSquares13;22;9.json");
+
+  //instantiate the heads-up display
   hud = new Hud();
 
   //load buttonClick audio sample
@@ -117,36 +122,8 @@ void keyPressed() {
       editor.cutMap();
     }
   } else if (key == 's' || key == 'S') {
-    saveMap();
+    editor.saveMap();
   }
 }
 
 /*-----------------------CUSTOM FUNCTIONS--------------------------*/
-
-//save the map to a JSON file
-void saveMap() {
-  //create a JSONArray to hold the gridsquares
-  JSONArray jsonGridSquares = new JSONArray();
-
-  //fill the JSONArray
-  for (int i = 0; i < editor.gridSquares.size(); i++) {
-
-    //get the gridSquare
-    GridSquare tempSquare = editor.gridSquares.get(i);
-
-    //create a new JSONObject and fill it with gridSquare info
-    JSONObject jGridSquare = new JSONObject();
-    jGridSquare.setFloat("x", tempSquare.position.x);
-    jGridSquare.setFloat("y", tempSquare.position.y);
-    if (tempSquare.sprite != null) {
-      jGridSquare.setInt("spriteNum", tempSquare.sprite.spriteNum);
-    } else {
-      jGridSquare.setInt("spriteNum", 0);
-    }
-
-    //add the JSONObject to the JSONArray
-    jsonGridSquares. setJSONObject(i, jGridSquare);
-  }
-
-  saveJSONArray(jsonGridSquares, "data/gridSquares" + hour() + ";" + minute() + ";" + second() + ".json");
-}

@@ -10,10 +10,17 @@ class GridSquare {
 
   /*----------------------------------- Methods ----------------------------------------*/
 
-  //Constructor
-  GridSquare(int x, int y) {
+  //Basic constructor
+  GridSquare(float x, float y) {
     position = new PVector(x, y);
     sprite = sprites[0];
+  }
+
+
+  //Constructor that sets a sprite
+  GridSquare(float x, float y, Sprite tempSprite) {
+    position = new PVector(x, y);
+    sprite = tempSprite;
   }
 
 
