@@ -13,10 +13,10 @@ class Editor {
 
   //the width of the map
   int mapWidth;
-  //x-offset for the camera
+  //x-position offset for the camera
   int cameraOffset;
 
-  /*----------------------------------- Methods ----------------------------------------*/
+  /*--------------------------------- Constructors -------------------------------------*/
 
   //Constructor for creating a new map
   Editor() {
@@ -37,6 +37,7 @@ class Editor {
     cameraOffset = 0;
   }
 
+
   //Constructor for loading a map from a JSON file
   Editor(String fileName) {
 
@@ -53,10 +54,12 @@ class Editor {
     cameraOffset = 0;
   }
 
+  /*----------------------------------- Methods ----------------------------------------*/
 
   //method to display the editor window
   void display() {
 
+    //translate to the correct map position based on the editor window origin and camera position
     pushMatrix();
     translate(origin.x - cameraOffset, origin.y);
 

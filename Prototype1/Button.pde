@@ -16,7 +16,7 @@ class Button {
   //the hover color of the button
   color hoverColor = color(160, 200, 200);
 
-  /*----------------------------------- Methods ----------------------------------------*/
+  /*----------------------------------- Constructors ----------------------------------------*/
 
   //Constructors
   Button(int x, int y, int tempWidth, int tempHeight, PImage tempImage) {
@@ -32,6 +32,8 @@ class Button {
     buttonImage = sprite.spriteImage;
   }
 
+
+  /*----------------------------------- Methods ----------------------------------------*/
 
   void display() {
     rectMode(CORNER);

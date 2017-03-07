@@ -1,4 +1,4 @@
-//define the class for the GridSquare
+//define the class for the GridSquare, the basic building-block for the level map
 
 class GridSquare {
   /*----------------------------------- Properties -------------------------------------*/
@@ -8,22 +8,25 @@ class GridSquare {
   Sprite sprite;
 
 
-  /*----------------------------------- Methods ----------------------------------------*/
+  /*----------------------------------- Constructors -----------------------------------*/
 
-  //Basic constructor
+  //THe basic constructor defaults to the empty sprite
   GridSquare(float x, float y) {
     position = new PVector(x, y);
     sprite = sprites[0];
   }
 
 
-  //Constructor that sets a sprite
+  //Constructor that sets a specified sprite
   GridSquare(float x, float y, Sprite tempSprite) {
     position = new PVector(x, y);
     sprite = tempSprite;
   }
 
 
+  /*----------------------------------- Methods ----------------------------------------*/
+
+  //method to display the gridSquare based on the sprite it contains
   void display(int cameraOffset, int editorWidth) {
     if (position.x >= cameraOffset && position.x < cameraOffset + editorWidth) {
       //display the stored sprite

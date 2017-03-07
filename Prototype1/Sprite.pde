@@ -11,7 +11,7 @@ class Sprite {
   Button spriteButton;
 
 
-  /*----------------------------------- Methods ----------------------------------------*/
+  /*----------------------------------- Constructors -----------------------------------*/
 
   //Constructor
   Sprite(int index, String fileName) {
@@ -20,6 +20,9 @@ class Sprite {
   }
 
 
+  /*----------------------------------- Methods ----------------------------------------*/
+
+  //method to display the sprite
   void display(float x, float y) {
     imageMode(CORNER);
     image(spriteImage, x, y);

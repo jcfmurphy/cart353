@@ -18,7 +18,7 @@ class Hud {
   PImage left, right, plus, minus, erase;
 
 
-  /*----------------------------------- Methods ----------------------------------------*/
+  /*----------------------------------- Constructors -----------------------------------*/
 
   //Constructor
   Hud() {
@@ -42,6 +42,9 @@ class Hud {
     buttons[8] = new Button(width - 50, 700, 50, 300, minus);
   }
 
+
+  /*----------------------------------- Methods ----------------------------------------*/
+
   //method to display the hud
   void display() {
     //draw the background
@@ -57,7 +60,7 @@ class Hud {
       b.display();
     }
 
-    //write the current mapWidth on the editor window
+    //write the current mapWidth and CameraOffset in the editor window
     fill(200, 150);
     textFont(bungee);
     textSize(32);
