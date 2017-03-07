@@ -1,6 +1,8 @@
-Artist’s Statement – Joshua Murphy
+                                                Artist’s Statement – Joshua Murphy
 
 While Internet Ugly is the aesthetic of mundaneness, “Internet Awesome” aspires to raise memetic culture to epic proportions with highly-stylized visuals and unabashed post-ironic valorization of subjects cherished by “the Internet” (e.g. unicorns, cats, Teddy Roosevelt). While the Internet has fractured popular culture, Internet Awesome acts as a small force of cultural unification by elevating and embracing these widely-beloved subjects. Popular works in this genre include Nyan Cat (saraj00n), Kung Fury (Sandberg), and Jason Heuser’s series of Presidential portraits.
+
 Inspired by Internet Awesome and 8-bit aesthetics, AmmUnicorn is a side-scrolling run-and-gun video game in which one plays as a unicorn fighting a variety of monsters with an arsenal of rainbow-based weapons. Like many works of Internet Awesome, Ammunicorn is a hedonistic embrace of retro nostalgia and appropriation. Ammunicorn comes with a level-editor and open source code, allowing users to modify, expand upon, and subvert the game in much the same way as the memes that were the game’s inspiration.
+
 Ammunicorn’s gameplay and mechanics are reminiscent of the arcade shooters of my youth, including Contra and Metal Slug. The game was also inspired by Super 3D Noah’s Ark, which attempted to draw Christian audiences by reskinning Wolfenstein 3D as a game about feeding animals in a bible story. By appropriating an antithetical intellectual property, the game undermined its own attempt to whitewash the violence. Ammunicorn eschews bullets for rainbows, but it mocks its own self-censorship by having the enemies die violently anyway. The game owes too much to its predecessors to avoid the criticisms that they faced.
 
