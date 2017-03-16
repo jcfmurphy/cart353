@@ -28,7 +28,7 @@ class Wind {
     float windNoise = noise(time);
     //map that value to be between -0.01 and 0.01
     windNoise = map(windNoise, 0, 1, -0.01, 0.01);
-    //set the windForce vector to a unit vector int he positive x direction
+    //set the windForce vector to a unit vector in the positive x direction
     windForce = new PVector(1, 0);
     //multiply this vector by the windNoise value
     windForce.mult(windNoise);

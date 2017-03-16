@@ -8,7 +8,7 @@ class ParticleSystem {
 
   ParticleSystem() {
     particles = new ArrayList<Particle>();
-    
+
     //start with some clouds in the sky
     particles.add(new Cloud(200));
     particles.add(new Cloud(500));
@@ -31,6 +31,16 @@ class ParticleSystem {
   }
 
   void addParticle() {
+    //add a flame every tenth frame
+    if (frameCount % 10 == 0) {
+      particles.add(new Flame());
+    }
+
+    //add a spark every tenth frame
+    if (frameCount % 10 == 0) {
+      particles.add(new Spark());
+    }
+
     //add a wave every fifth frame
     if (frameCount % 5 == 0) {
       particles.add(new Wave());

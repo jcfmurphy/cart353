@@ -14,9 +14,9 @@ class Cloud extends Particle {
     //determine starting x position based on wind direction
     int xPos;
     if (wind.getWindVelocity().x >= 0) {
-      xPos = -3 * size;
+      xPos = int(-3 * size);
     } else {
-      xPos = width + 3 * size;
+      xPos = int(width + 3 * size);
     }
 
     position = new PVector(xPos, random(size, 350));

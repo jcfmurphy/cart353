@@ -4,7 +4,7 @@ class Particle {
   /*----------------------------------- Properties -------------------------------------*/
   PVector position;
   PVector velocity;
-  int size;
+  float size;
   float lifespan;
   float transparency;
 
