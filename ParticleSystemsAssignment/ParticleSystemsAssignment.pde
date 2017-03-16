@@ -8,9 +8,11 @@ Joshua Murphy
  3) Fire
  4) Sparks
  
- Each of these aprticles is affected by wind that is determined by Perlin noise
+ Each of these particles is affected by wind that is determined by Perlin noise
  
  Press a mouse button to switch between day and night
+ 
+ An enhanced for loop is used to display the array of stars at night, and an iterator is used to run all of the particles in the particle system
  
  */
 
@@ -119,7 +121,7 @@ void drawBackground() {
     fill(225);
     ellipse(1400, 100, 160, 160);
     
-    //display the stars
+    //display the stars using an enhanced for loop
     for (Star s : stars) {
      s.display(); 
     }

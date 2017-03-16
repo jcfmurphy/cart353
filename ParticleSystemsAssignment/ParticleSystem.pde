@@ -20,10 +20,14 @@ class ParticleSystem {
   /*----------------------------------- Methods ----------------------------------------*/
 
   void run() {
+    //create an iterator for the particles ArrayList
     Iterator<Particle> it = particles.iterator();
+    //iterate through the ArrayList
     while (it.hasNext()) {
       Particle p = it.next();
+      //run the particle
       p.run();
+      //remove the particle if it has run through its lifespan
       if (p.isDead()) {
         it.remove();
       }
