@@ -8,6 +8,10 @@ Joshua Murphy
  3) Fire
  4) Sparks
  
+ Each of these aprticles is affected by wind that is determined by Perlin noise
+ 
+ Press a mouse button to switch between day and night
+ 
  */
 
 /*-----------------------IMPORT LIBRARIES--------------------------*/

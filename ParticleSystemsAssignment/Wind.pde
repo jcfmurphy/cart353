@@ -37,7 +37,7 @@ class Wind {
     windVelocity = PVector.mult(windForce, 100);
 
     //increment time
-    time += 0.0001;
+    time += 0.0005;
   }
 
   PVector getWindForce() {
