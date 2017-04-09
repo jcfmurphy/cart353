@@ -10,15 +10,18 @@ class Editor {
   int editorHeight = height;
   //arraylist of gridSquares
   ArrayList<GridSquare> gridSquares;
+  //The hud for the editor
+  EditorHud hud;
 
   //the width of the map
   int mapWidth;
   //x-position offset for the camera
   int cameraOffset;
 
+
   /*--------------------------------- Constructors -------------------------------------*/
 
-  //Constructor for creating a new map
+  //Constructor for creating a new editor
   Editor() {
 
     //Initialize and fill arraylist of gridSquares
@@ -32,9 +35,12 @@ class Editor {
 
     //start the map at the same width as the editor window
     mapWidth = editorWidth;
-    
+
     //start with the camera offset at zero
     cameraOffset = 0;
+
+    //create a new hud for the editor
+    hud = new EditorHud();
   }
 
 
@@ -49,9 +55,12 @@ class Editor {
 
     //set the mapWidth based on the size of the gridSquares arrayList
     mapWidth = gridSquares.size() * 10;
-    
+
     //start with the camera offset at zero
     cameraOffset = 0;
+
+    //create a new hud for the editor
+    hud = new EditorHud();
   }
 
   /*----------------------------------- Methods ----------------------------------------*/
@@ -71,7 +80,7 @@ class Editor {
 
     //display the stored gridSquares
     for (GridSquare g : gridSquares) {
-      g.display(cameraOffset, editorWidth);
+      g.editorDisplay(cameraOffset, editorWidth);
     }
 
     //draw 100 X 100 pixel grid lines for sprite placement
@@ -85,6 +94,9 @@ class Editor {
     }
 
     popMatrix();
+
+    //display the editor hud
+    hud.display();
   }
 
 
@@ -98,7 +110,7 @@ class Editor {
     if (selectedSprite.getSpriteNum() == 1) {
 
       //check all GridSquares
-      for (GridSquare g : editor.gridSquares) {
+      for (GridSquare g : gridSquares) {
         //empty other unicorn GridSquares
         if (g != fillSquare) {
           if (g.getSprite().getSpriteNum() == 1) {
@@ -134,7 +146,7 @@ class Editor {
 
 
   //method to check if a position is in the editor window
-  boolean inEditor(float x, float y) {
+  boolean inGrid(float x, float y) {
     if (x >= origin.x && x < origin.x + editorWidth && y >= origin.y && y < height) {
       return true;
     } else {
@@ -148,7 +160,7 @@ class Editor {
     GridSquare returnSquare = null;
 
     //check all gridSquares
-    for (GridSquare g : editor.gridSquares) {
+    for (GridSquare g : gridSquares) {
       if (g.inGridSquare(x, y)) {
         returnSquare = g;
       }
@@ -192,46 +204,59 @@ class Editor {
 
   //method to move the editor window camera to the left
   void cameraLeft() {
-    if (editor.cameraOffset >= 100) {
-      editor.cameraOffset -= 100;
+    if (cameraOffset >= 100) {
+      cameraOffset -= 100;
     }
   }
 
 
   //method to move the editor window camera to the right
   void cameraRight() {
-    if (editor.cameraOffset < mapWidth - editorWidth) {
-      editor.cameraOffset += 100;
+    if (cameraOffset < mapWidth - editorWidth) {
+      cameraOffset += 100;
     }
   }
 
 
   //function to save the map to a JSON file
   void saveMap() {
-    //create a JSONArray to hold the gridsquares
-    JSONArray jsonGridSquares = new JSONArray();
-
-    //fill the JSONArray
-    for (int i = 0; i < editor.gridSquares.size(); i++) {
-
-      //get the gridSquare
-      GridSquare tempSquare = editor.gridSquares.get(i);
-
-      //create a new JSONObject and fill it with gridSquare info
-      JSONObject jGridSquare = new JSONObject();
-      jGridSquare.setFloat("x", tempSquare.position.x);
-      jGridSquare.setFloat("y", tempSquare.position.y);
-      if (tempSquare.sprite != null) {
-        jGridSquare.setInt("spriteNum", tempSquare.sprite.spriteNum);
-      } else {
-        jGridSquare.setInt("spriteNum", 0);
+    //check to see if there is a unicorn in the level
+    boolean unicornExists = false;
+    for (GridSquare g : gridSquares) {
+      if (g.getSprite().getSpriteNum() == 1) {
+        unicornExists = true;
       }
-
-      //add the JSONObject to the JSONArray
-      jsonGridSquares. setJSONObject(i, jGridSquare);
     }
 
-    saveJSONArray(jsonGridSquares, "data/gridSquares" + hour() + ";" + minute() + ";" + second() + ".json");
+    //only save the map if there is a unicorn in there
+    if (unicornExists) {
+      //create a JSONArray to hold the gridsquares
+      JSONArray jsonGridSquares = new JSONArray();
+
+      //fill the JSONArray
+      for (int i = 0; i < gridSquares.size(); i++) {
+
+        //get the gridSquare
+        GridSquare tempSquare = gridSquares.get(i);
+
+        //create a new JSONObject and fill it with gridSquare info
+        JSONObject jGridSquare = new JSONObject();
+        jGridSquare.setFloat("x", tempSquare.position.x);
+        jGridSquare.setFloat("y", tempSquare.position.y);
+        if (tempSquare.sprite != null) {
+          jGridSquare.setInt("spriteNum", tempSquare.sprite.spriteNum);
+        } else {
+          jGridSquare.setInt("spriteNum", 0);
+        }
+
+        //add the JSONObject to the JSONArray
+        jsonGridSquares. setJSONObject(i, jGridSquare);
+      }
+
+      saveJSONArray(jsonGridSquares, "data/gridSquares" + hour() + ";" + minute() + ";" + second() + ".json");
+    } else {
+      hud.setSaveMessage(frameCount);
+    }
   }
 
 
@@ -246,12 +271,12 @@ class Editor {
     for (int i = 0; i < mapArray.size(); i++) {
       //load the JSON object
       JSONObject jsonSquare = mapArray.getJSONObject(i);
-      
+
       //unpack the variables
       float jsonX = jsonSquare.getFloat("x");
       float jsonY = jsonSquare.getFloat("y");
       int jsonNum = jsonSquare.getInt("spriteNum");
-      
+
       //Create a new gridSquare and add it to the listArray
       gridSquares.add(new GridSquare(jsonX, jsonY, sprites[jsonNum]));
     }

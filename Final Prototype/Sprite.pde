@@ -7,8 +7,6 @@ class Sprite {
   PImage spriteImage;
   //the number of the sprite
   int spriteNum;
-  //the button of the sprite
-  Button spriteButton;
 
 
   /*----------------------------------- Constructors -----------------------------------*/
