@@ -254,8 +254,9 @@ class Editor {
       }
 
       saveJSONArray(jsonGridSquares, "data/gridSquares" + hour() + ";" + minute() + ";" + second() + ".json");
-    } else {
       hud.setSaveMessage(frameCount);
+    } else {
+      hud.setSaveWarning(frameCount);
     }
   }
 

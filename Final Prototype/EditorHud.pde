@@ -23,10 +23,13 @@ class EditorHud {
 
   //y-position offset for the hud
   int yOffset;
-  
-  //variables for the message to include a unicron in the level before saving
+
+  //variables for the message when the level is saved
   int saveMessage = -300;
-  String saveString = "The unicorn must be placed in the level before you can save";
+  String message = "This level has been saved as a .json file in the data folder";
+  //variables for the message to include a unicorn in the level before saving
+  int saveWarning = -300;
+  String warning = "The unicorn must be placed in the level before you can save";
 
 
   /*----------------------------------- Constructors -----------------------------------*/
@@ -107,11 +110,16 @@ class EditorHud {
     float textX = system.editor.getOrigin().x + (system.editor.getEditorWidth() * 0.5);
     String text = "Map Width: " + system.editor.getMapWidth() + "   Camera Offset: " + system.editor.getCameraOffset();
     text(text, textX, 50);
-    
-    //write the save warning to the screen for 150 frames after the user tries to save with no unicorn in the level
+
+    //write the save message to the screen for 150 frames after the user saves the level
     if (frameCount - saveMessage < 150) {
       textSize(52);
-      text(saveString, 200, 0, 1400, 1000);
+      text(message, 200, 0, 1400, 1000);
+    }
+    //write the save warning to the screen for 150 frames after the user tries to save with no unicorn in the level
+    if (frameCount - saveWarning < 150) {
+      textSize(52);
+      text(warning, 200, 0, 1400, 1000);
     }
   }
 
@@ -180,7 +188,11 @@ class EditorHud {
       }
     }
   }
-  
+
+  void setSaveWarning(int frame) {
+    saveWarning = frame;
+  }
+
   void setSaveMessage(int frame) {
     saveMessage = frame;
   }

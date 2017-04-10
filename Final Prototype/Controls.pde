@@ -16,8 +16,12 @@ class Controls {
 
   void mousePress() {
 
+    //game mousePressed controls
+    if (system.getShowGame()) {
+      system.game.shoot();
+    } 
     //editor mousePressed controls
-    if (system.getShowEditor()) {
+    else if (system.getShowEditor()) {
       //if in the map grid window...
       if (system.editor.inGrid(mouseX, mouseY)) {
         //fill the grid square with the selected sprite
@@ -54,7 +58,7 @@ class Controls {
     //in-game keyPressed controls
     if (system.getShowGame()) {
       setKeys(true);
-      if (key == 'w' || key == 'W') {
+      if (key == ' ' || key == ' ') {
         system.game.unicorn.jump();
       }
     }
@@ -90,6 +94,9 @@ class Controls {
   //method to set the booleans for directional keys
   void setKeys(boolean press) {
     //set the directional booleans based on the press and release of the wasd keys
+    if (key == 'w' || key == 'W') {
+      w = press;
+    }
     if (key == 'a' || key == 'A') {
       a = press;
     }

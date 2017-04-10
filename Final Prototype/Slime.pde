@@ -5,12 +5,13 @@ class Slime extends Enemy {
   /*----------------------------------- Properties -------------------------------------*/
 
   //variables to track the action state of the slime
-  State walkRight = new State("SlimeWalkRight", 60);
-  State walkLeft = new State("SlimeWalkLeft", 60);
+  State walkRight = new State("SlimeWalkRight", 60, -10, -20, 140, 20);
+  State walkLeft = new State("SlimeWalkLeft", 60, -25, -20, 20, 20);
   State currentState;
   int stateFrame;
 
-
+  //track the next frame that the slime will shoot a slimeShot
+  int nextShot;
   /*----------------------------------- Methods ----------------------------------------*/
 
   //Constructor
@@ -22,6 +23,8 @@ class Slime extends Enemy {
     faceRight = false;
     enemyWidth = 160;
     enemyHeight = 80;
+    hitPoints = 3;
+    nextShot = int(random(120, 180));
   }
 
 
@@ -38,16 +41,13 @@ class Slime extends Enemy {
       //resolve y-movement, checking for obstacles
       resolveY();
 
-      //play slime sound once per animation cycle
-      if (stateFrame % 60 == 10) {
-        slimeSound.trigger();
+      if (nextShot == frameCount) {
+        shoot();
       }
+    }
 
-      //display hitbox for testing
-      //stroke(0);
-      //strokeWeight(1);
-      //fill(255, 0, 0, 100);
-      //rect(position.x, position.y, enemyWidth, enemyHeight);
+    if (nextShot == frameCount) {
+      nextShot = frameCount + int(random(90, 120));
     }
   }
 
@@ -55,13 +55,22 @@ class Slime extends Enemy {
   //method to draw the Slime in different states
   void display() {    
 
-    PImage currentImage = currentState.getFrame(stateFrame);
-    if (faceRight) {
-      image(currentImage, position.x - 10, position.y - 20);
-    } else {
-      image(currentImage, position.x - 25, position.y - 20);
-    }
+    currentState.display(stateFrame, position.x, position.y);
+
+    //PImage currentImage = currentState.getFrame(stateFrame);
+    //if (faceRight) {
+    //  image(currentImage, position.x - 10, position.y - 20);
+    //} else {
+    //  image(currentImage, position.x - 25, position.y - 20);
+    //}
+
     stateFrame++;
+
+    //display hitbox for testing
+    //stroke(0);
+    //strokeWeight(1);
+    //fill(255, 0, 0, 100);
+    //rect(position.x, position.y, enemyWidth, enemyHeight);
   }
 
 
@@ -158,9 +167,15 @@ class Slime extends Enemy {
     }
   }
 
+  void shoot() {
 
-  //apply a force to the slime
-  void applyForce(PVector force) {
-    velocity.add(force);
+    system.game.projectiles.add(new SlimeShot(position.x + currentState.getGunOffsetX(), position.y + currentState.getGunOffsetY(), faceRight));
+
+    slimeSound.trigger();
+  }
+
+  void hit(int damage) {
+    super.hit(damage);
+    slimeSound.trigger();
   }
 }

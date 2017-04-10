@@ -26,6 +26,9 @@ class Game {
   //arraylist of enemies
   ArrayList<Enemy> enemies;
 
+  //arraylist of projectiles
+  ArrayList<Projectile> projectiles;
+
   //the force of gravity
   PVector gravity = new PVector(0, 1.5);
   PVector waterGravity = new PVector(0, 0.3);
@@ -35,9 +38,13 @@ class Game {
 
   //coefficient of friction of the ground
   float frictionC = 0.35;
-  
+
   //boolean to track whether the game is over
   boolean gameOver = false;
+
+  //tracks the unicorn's current weapon
+  String currentWeapon = "ArcShot";
+
 
 
   /*--------------------------------- Constructors -------------------------------------*/
@@ -48,6 +55,7 @@ class Game {
     //initialize the arraylists
     gridSquares = new ArrayList<GridSquare>();
     enemies = new ArrayList<Enemy>();
+    projectiles = new ArrayList<Projectile>();
 
     //set the string to load the first level
     level = 1;
@@ -87,8 +95,33 @@ class Game {
     unicorn.update();
 
     for (int i = enemies.size() - 1; i >= 0; i--) {
-      enemies.get(i).update();
-      enemies.get(i).hitUnicorn(unicorn);
+      Enemy e = enemies.get(i);
+      e.update();
+      e.hitUnicorn(unicorn);
+      if (e.getDead()) {
+        enemies.remove(i);
+      } else {
+        e.display();
+      }
+    }
+
+    for (int i = projectiles.size() - 1; i >= 0; i--) {
+      Projectile p = projectiles.get(i);
+      p.update();
+      
+      //hit intersecting enemies (if it is a enemy-hitter)
+      for (Enemy e : enemies) {
+        p.hitEnemy(e);
+      }
+      
+      //hit the unicorn if it is intersecting and a unicorn-hitter
+      p.hitUnicorn(unicorn);
+
+      if (p.getActive()) {
+        p.display();
+      } else {
+        projectiles.remove(i);
+      }
     }
 
     //display the unicorn
@@ -147,12 +180,54 @@ class Game {
     } else {
       goalOffset = unicorn.getXPos() - gameWidth * 0.7;
     }
-    
+
     //ease toward the ideal offset
     cameraOffset = int(0.9 * cameraOffset + 0.1 * goalOffset);
     cameraOffset = int(constrain(cameraOffset, 0, mapWidth - gameWidth));
   }
-  
+
+  //find a position where the unicorn can respawn after dying
+  PVector safePosition() {
+
+    for (int i = gridSquares.size() - 1; i >=0; i--) {
+      GridSquare g = gridSquares.get(i);
+
+      if (g.getXPos() <= unicorn.getXPos() &&
+        g.getYPos() >= 200 &&
+        (g.getBarrier() || g.getPlatform())) {
+        if (!checkForBarrier(g.getXPos(), g.getYPos() - 100) && !checkForBarrier(g.getXPos(), g.getYPos() - 200)) {
+          return new PVector(g.getXPos(), g.getYPos() - 190);
+        }
+      }
+    }
+
+    //fallback in case no safe position was found
+    return new PVector(0, 0);
+  }
+
+  //check whether there is a barrier-type tile at a given location
+  boolean checkForBarrier(float x, float y) {
+
+    for (GridSquare g : gridSquares) {
+      if (g.getXPos() == int(x * 0.01) * 100 && 
+        g.getYPos() == int(y * 0.01) * 100 &&
+        g.getBarrier()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  void shoot() {
+    if (!unicorn.getHit()) {
+      if (currentWeapon == "ArcShot") {
+        projectiles.add(new ArcShot(unicorn.getShotXPos(), unicorn.getShotYPos(), unicorn.getFaceRight()));
+        arcSound.trigger();
+      }
+    }
+  }
+
   void setGameOver(boolean over) {
     gameOver = over;
   }
@@ -182,5 +257,9 @@ class Game {
 
   int getGameWidth() {
     return gameWidth;
+  }
+  
+  void setCurrentWeapon(String weapon) {
+    currentWeapon = weapon;
   }
 }

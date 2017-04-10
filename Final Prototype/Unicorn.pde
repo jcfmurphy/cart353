@@ -12,6 +12,8 @@ class Unicorn {
   //the width and height of the unicorn
   int unicornWidth = 45;
   int unicornHeight = 190;
+  int crouchOffset = 40;
+
 
   //movement forces
   PVector jumpForce = new PVector(0, -32);
@@ -19,25 +21,36 @@ class Unicorn {
   PVector walkForce = new PVector(3, 0);
 
   //top speed for horizontal movement
-  float topSpeed = 8;
+  float topSpeed = 10;
 
   //variables to track the action state of the unicorn
-  State idleRight = new State("UnicornIdleRight", 1);
-  State walkRight = new State("UnicornWalkRight", 24);
-  State jumpRight = new State("UnicornJumpRight", 1);
-  State slideRight = new State("UnicornSlideRight", 1);
-  State hitRight = new State("UnicornHitRight", 30);
-  State idleLeft = new State("UnicornIdleLeft", 1);
-  State walkLeft = new State("UnicornWalkLeft", 24);
-  State jumpLeft = new State("UnicornJumpLeft", 1);
-  State slideLeft = new State("UnicornSlideLeft", 1);
-  State hitLeft = new State("UnicornHitLeft", 30);
+  State idleRight = new State("UnicornIdleRight", 1, -10, -10, 100, 55);
+  State idleRightUp = new State("IdleRightUp", 1, -5, -41, 22, -30);
+  State walkRight = new State("UnicornWalkRight", 24, -40, -10, 100, 55);
+  State walkRightUp = new State("WalkRightUp", 24, -40, -41, 22, -30);
+  State jumpRight = new State("UnicornJumpRight", 1, -10, -10, 100, 55);
+  State jumpRightUp = new State("JumpRightUp", 1, -5, -41, 22, -30);
+  State slideRight = new State("UnicornSlideRight", 1, -10, -10, 100, 55);
+  State slideRightUp = new State("SlideRightUp", 1, -5, -41, 22, -30);
+  State hitRight = new State("UnicornHitRight", 30, -100, -10, 100, 55);
+  State crouchRight = new State("UnicornCrouchRight", 1, -20, 28, 100, 95);
+  State idleLeft = new State("UnicornIdleLeft", 1, -45, -10, -95, 55);
+  State idleLeftUp = new State("IdleLeftUp", 1, -14, -41, -14, -30);
+  State walkLeft = new State("UnicornWalkLeft", 24, -45, -10, -95, 55);
+  State walkLeftUp = new State("WalkLeftUp", 24, -31, -41, -14, -30);
+  State jumpLeft = new State("UnicornJumpLeft", 1, -45, -10, -95, 55);
+  State jumpLeftUp = new State("JumpLeftUp", 1, -30, -41, -14, -30);
+  State slideLeft = new State("UnicornSlideLeft", 1, -45, -10, -95, 55);
+  State slideLeftUp = new State("SlideLeftUp", 1, -22, -41, -14, -30);
+  State hitLeft = new State("UnicornHitLeft", 30, -60, -10, -95, 55);
+  State crouchLeft = new State("UnicornCrouchLeft", 1, -55, 28, -95, 95);
 
   State currentState;
   int stateFrame;
   boolean faceRight;
   boolean onGround;
   boolean inWater;
+  boolean crouched;
   int lastJump;
 
   //booleans to indicate hit status
@@ -72,23 +85,34 @@ class Unicorn {
 
     //display the unicorn (if it is not flashed out)
     if (!flash) {
-      PImage currentImage = currentState.getFrame(stateFrame);
-      if (currentState == walkRight) {
-        image(currentImage, position.x - 40, position.y - 10);
-      } else if (!faceRight) {
-        image(currentImage, position.x - 45, position.y - 10);
-      } else if (currentState == hitRight) {
-        image(currentImage, position.x - 100, position.y - 10);
-      } else {
-        image(currentImage, position.x - 10, position.y - 10);
-      }
+      
+      currentState.display(stateFrame, position.x, position.y);
+      
+      //PImage currentImage = currentState.getFrame(stateFrame);
+      //if (currentState == walkRight) {
+      //  image(currentImage, position.x - 40, position.y - 10);
+      //} else if (!faceRight && currentState != crouchLeft) {
+      //  image(currentImage, position.x - 45, position.y - 10);
+      //} else if (currentState == hitRight) {
+      //  image(currentImage, position.x - 100, position.y - 10);
+      //} else if (currentState == crouchRight) {
+      //  image(currentImage, position.x - 20, position.y + 28);
+      //} else if (currentState == crouchLeft) {
+      //  image(currentImage, position.x - 55, position.y + 28);
+      //} else {
+      //  image(currentImage, position.x - 10, position.y - 10);
+      //}
     }
 
-    ////show hitbox for testing
-    //stroke(0);
-    //strokeWeight(1);
-    //fill(255, 0, 0, 100);
-    //rect(position.x, position.y, unicornWidth, unicornHeight);
+    //show hitbox for testing
+    stroke(0);
+    strokeWeight(1);
+    fill(255, 0, 0, 100);
+    if (!crouched) {
+      rect(position.x, position.y, unicornWidth, unicornHeight);
+    } else {
+      rect(position.x, position.y + crouchOffset, unicornWidth, unicornHeight - crouchOffset);
+    }
   }
 
 
@@ -97,39 +121,79 @@ class Unicorn {
     //boolean to store the store the state determined this frame and compare to the previous frame
     State newState;
 
+    //reset the crouched boolean
+    crouched = false;
+
     //logic to find the state as of this frame
     if (hit) {
       if (faceRight) {
         newState = hitRight;
-        flash = !flash;
       } else {
         newState = hitLeft;
-        flash = !flash;
       }
     } else {
       if (onGround) {
-        if (d) {
-          newState = walkRight;
+        if (s) {
+          crouched = true;
+          if (faceRight) {
+            newState = crouchRight;
+          } else {
+            newState = crouchLeft;
+          }
+        } else if (d) {
+          if (w) {
+            newState = walkRightUp;
+          } else {
+            newState = walkRight;
+          }
         } else if (a) {
-          newState = walkLeft;
+          if (w) {
+            newState = walkLeftUp;
+          } else {
+            newState = walkLeft;
+          }
         } else {
           if (velocity.x > 1) {
-            newState = slideRight;
+            if (w) {
+              newState = slideRightUp;
+            } else {
+              newState = slideRight;
+            }
           } else if (velocity.x < -1) {
-            newState = slideLeft;
+            if (w) {
+              newState = slideLeftUp;
+            } else {
+              newState = slideLeft;
+            }
           } else {
             if (faceRight) {
-              newState = idleRight;
+              if (w) {
+                newState = idleRightUp;
+              } else {
+                newState = idleRight;
+              }
             } else {
-              newState = idleLeft;
+              if (w) {
+                newState = idleLeftUp;
+              } else {
+                newState = idleLeft;
+              }
             }
           }
         }
       } else {
         if (faceRight) {
-          newState = jumpRight;
+          if (w) {
+            newState = jumpRightUp;
+          } else {
+            newState = jumpRight;
+          }
         } else {
-          newState = jumpLeft;
+          if (w) {
+            newState = jumpLeftUp;
+          } else {
+            newState = jumpLeft;
+          }
         }
       }
     }
@@ -159,7 +223,6 @@ class Unicorn {
     //apply movement forces from player input
     playerMoves();
 
-
     //apply gravity
     if (inWater) {
       applyForce(system.game.getWaterGravity());
@@ -172,7 +235,7 @@ class Unicorn {
     drag();
 
     //set velocity to zero if it is below a threshold
-    if (velocity.mag() < 0.1) {
+    if (velocity.mag() < 0.3) {
       velocity.mult(0);
     } 
     //and enforce the top horizontal speed
@@ -217,7 +280,6 @@ class Unicorn {
       }
     }
 
-
     //reset acceleration
     acceleration.mult(0);
   }
@@ -231,12 +293,16 @@ class Unicorn {
   //deals with input from the player that moves the unicorn
   void playerMoves() {
     if (a && !hit) {
-      applyForce(PVector.mult(walkForce, -1));
       faceRight = false;
+      if (!s) {
+        applyForce(PVector.mult(walkForce, -1));
+      }
     }
     if (d && !hit) {
-      applyForce(walkForce);
       faceRight = true;
+      if (!s) {
+        applyForce(walkForce);
+      }
     }
   }
 
@@ -450,8 +516,12 @@ class Unicorn {
     hit = false;
     invincible = true;
     invincibleFrame = frameCount;
-    
+    system.game.setCurrentWeapon("ArcShot");
+
     //set a safe location for resurrection
+    position = system.game.safePosition();
+    velocity.x = 0;
+    velocity.y = 0;
 
     //game over if no remaining lives
     if (lives <= 0) {
@@ -460,7 +530,7 @@ class Unicorn {
   }
 
   void hit() {
-    if (!hit) {
+    if (!hit && !invincible) {
       hit = true;
       velocity.y = -32;
       if (faceRight) {
@@ -471,6 +541,14 @@ class Unicorn {
       }
       deathGrunt.trigger();
     }
+  }
+
+  float getShotXPos() {
+    return position.x + currentState.getGunOffsetX();
+  }
+
+  float getShotYPos() {
+    return position.y + currentState.getGunOffsetY();
   }
 
   boolean getInvincible() {
@@ -496,8 +574,20 @@ class Unicorn {
   int getLives() {
     return lives;
   }
-  
+
   boolean getFaceRight() {
-   return faceRight; 
+    return faceRight;
+  }
+
+  int getCrouchOffset() {
+    return crouchOffset;
+  }
+
+  boolean getCrouched() {
+    return crouched;
+  }
+
+  boolean getHit() {
+    return hit;
   }
 }

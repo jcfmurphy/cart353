@@ -31,6 +31,7 @@ AudioSample waterJump;
 AudioSample splash;
 AudioSample slimeSound;
 AudioSample deathGrunt;
+AudioSample arcSound;
 
 //create an array of sprites
 Sprite[] sprites;
@@ -80,6 +81,7 @@ void setup() {
   splash = minim.loadSample("splash.wav", 512);
   slimeSound = minim.loadSample("slimeSound.wav", 512);
   deathGrunt = minim.loadSample("deathGrunt.wav", 512);
+  arcSound = minim.loadSample("arcSound.wav", 512);
 
   //set the selected sprite
   selectedSprite = sprites[0];
