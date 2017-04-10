@@ -8,6 +8,8 @@ class Game {
   int gameWidth = 1400;  
   //the in-game heads-up display
   GameHud hud;
+  //background color
+  color bgColor = color(0, 100, 190);
 
   //arraylist of gridSquares
   ArrayList<GridSquare> gridSquares;
@@ -21,13 +23,18 @@ class Game {
   //the unicorn player character
   Unicorn unicorn;
   //number of lives remaining
-  int lives;
+  int lives = 3;
+  //scorre accumulated
+  int score = 0;
 
   //arraylist of enemies
   ArrayList<Enemy> enemies;
 
   //arraylist of projectiles
   ArrayList<Projectile> projectiles;
+
+  //arraylist of rainbowdoors
+  ArrayList<RainbowDoor> rainbowDoors;
 
   //the force of gravity
   PVector gravity = new PVector(0, 1.5);
@@ -39,23 +46,24 @@ class Game {
   //coefficient of friction of the ground
   float frictionC = 0.35;
 
-  //boolean to track whether the game is over
+  //boolean to track whether the game is over or level is completed
   boolean gameOver = false;
+  boolean endLevel = false;
 
   //tracks the unicorn's current weapon
   String currentWeapon = "ArcShot";
 
-
+  //boolean to record if the music has started yet
+  boolean loopStarted = false;
 
   /*--------------------------------- Constructors -------------------------------------*/
 
   //Constructor for creating a new game
   Game() {
 
-    //initialize the arraylists
-    gridSquares = new ArrayList<GridSquare>();
     enemies = new ArrayList<Enemy>();
     projectiles = new ArrayList<Projectile>();
+    rainbowDoors = new ArrayList<RainbowDoor>();
 
     //set the string to load the first level
     level = 1;
@@ -76,14 +84,20 @@ class Game {
   //calls the functions needed to run the game
   void display() {
 
+    //start the music if it hasn't already started
+    if (!loopStarted && !gameOver) {
+      music.loop();
+      loopStarted = true;
+    }
+
     //translate to the correct map position based on the editor window origin and camera position
     pushMatrix();
     translate(origin.x - cameraOffset, origin.y);
 
-    //draw black background
+    //draw blue background
     rectMode(CORNER);
     noStroke();
-    fill(0, 100, 190);
+    fill(bgColor);
     rect(cameraOffset, 0, gameWidth, height);
 
     //display the gridSquares
@@ -91,41 +105,49 @@ class Game {
       g.gameDisplay(cameraOffset, gameWidth);
     }
 
-    //update the unicorn
-    unicorn.update();
+    if (!gameOver && !endLevel) {
+      //update the unicorn
+      unicorn.update();
 
-    for (int i = enemies.size() - 1; i >= 0; i--) {
-      Enemy e = enemies.get(i);
-      e.update();
-      e.hitUnicorn(unicorn);
-      if (e.getDead()) {
-        enemies.remove(i);
-      } else {
-        e.display();
+      for (int i = enemies.size() - 1; i >= 0; i--) {
+        Enemy e = enemies.get(i);
+        e.update();
+        e.hitUnicorn(unicorn);
+        if (e.getDead()) {
+          enemies.remove(i);
+        } else {
+          e.display();
+        }
       }
+
+      for (int i = projectiles.size() - 1; i >= 0; i--) {
+        Projectile p = projectiles.get(i);
+        p.update();
+
+        //hit intersecting enemies (if it is a enemy-hitter)
+        for (Enemy e : enemies) {
+          p.hitEnemy(e);
+        }
+
+        //hit the unicorn if it is intersecting and a unicorn-hitter
+        p.hitUnicorn(unicorn);
+
+        if (p.getActive()) {
+          p.display();
+        } else {
+          projectiles.remove(i);
+        }
+      }
+
+      //display the rainbowDoors and check if the unicorn has got to them
+      for (RainbowDoor r : rainbowDoors) {
+        r.display();
+        r.intersectUnicorn(unicorn);
+      }
+
+      //display the unicorn
+      unicorn.display();
     }
-
-    for (int i = projectiles.size() - 1; i >= 0; i--) {
-      Projectile p = projectiles.get(i);
-      p.update();
-      
-      //hit intersecting enemies (if it is a enemy-hitter)
-      for (Enemy e : enemies) {
-        p.hitEnemy(e);
-      }
-      
-      //hit the unicorn if it is intersecting and a unicorn-hitter
-      p.hitUnicorn(unicorn);
-
-      if (p.getActive()) {
-        p.display();
-      } else {
-        projectiles.remove(i);
-      }
-    }
-
-    //display the unicorn
-    unicorn.display();
 
     for (int i = enemies.size() - 1; i >= 0; i--) {
       enemies.get(i).display();
@@ -136,11 +158,20 @@ class Game {
 
     popMatrix();
 
+    if (gameOver) {
+      endGame();
+    } else if (endLevel) {
+      unicorn.display();
+      endLevel();
+    }
+
     hud.display();
   }
 
   //function to load a level from a JSON file
   void loadMap(String fileName) {
+    //initialize the gridsquares arraylist
+    gridSquares = new ArrayList<GridSquare>();
     //create a JSONArray to hold the map
     JSONArray mapArray = new JSONArray();
     //fill the mapArray from the JSON file using the fileName
@@ -165,6 +196,8 @@ class Game {
         unicorn = new Unicorn(jsonX, jsonY);
       } else if (jsonNum == 6) {
         enemies.add(new Slime(jsonX, jsonY));
+      } else if (jsonNum == 8) {
+        rainbowDoors.add(new RainbowDoor(jsonX, jsonY));
       } else {
         //Create a new gridSquare and add it to the listArray
         gridSquares.add(new GridSquare(jsonX, jsonY, sprites[jsonNum]));
@@ -220,7 +253,7 @@ class Game {
   }
 
   void shoot() {
-    if (!unicorn.getHit()) {
+    if (!unicorn.getHit() && !gameOver) {
       if (currentWeapon == "ArcShot") {
         projectiles.add(new ArcShot(unicorn.getShotXPos(), unicorn.getShotYPos(), unicorn.getFaceRight()));
         arcSound.trigger();
@@ -228,8 +261,48 @@ class Game {
     }
   }
 
+  void endGame() {
+
+    //display "Game Over"
+    fill(230);
+    textFont(bungee);
+    textSize(300);
+    textAlign(CENTER, CENTER);
+    text("Game", 950, 275);
+    text("Over", 950, 525);
+
+    //"Press Enter to begin a new game"
+    textSize(60);
+    text("Press Enter to begin a new game", 950, 750);
+    text("or Space to return to the menu", 950, 810);
+  }
+
+  void endLevel() {
+    //display "Level Complete" message
+    fill(230);
+    textFont(bungee);
+    textSize(200);
+    textAlign(CENTER, CENTER);
+    text("Level", 950, 275);
+    text("Complete", 950, 525);
+    textSize(60);
+    text("Press Enter to begin the next level", 950, 750);
+  }
+
   void setGameOver(boolean over) {
     gameOver = over;
+  }
+
+  void setEndLevel(boolean end) {
+    endLevel = end;
+  }
+
+  boolean getGameOver() {
+    return gameOver;
+  }
+  
+  boolean getEndLevel() {
+    return endLevel;
   }
 
   PVector getGravity() {
@@ -258,8 +331,36 @@ class Game {
   int getGameWidth() {
     return gameWidth;
   }
-  
+
   void setCurrentWeapon(String weapon) {
     currentWeapon = weapon;
+  }
+
+  String getCurrentWeapon() {
+    return currentWeapon;
+  }
+
+  void setScore (int points) {
+    score = points;
+  }
+
+  int getScore() {
+    return score;
+  }
+  
+  int getLevel() {
+    return level;
+  }
+  
+  void setLevel(int l) {
+    level = l;
+  }
+  
+  void setLives(int l) {
+    lives = l;
+  }
+  
+  int getLives() {
+    return lives;
   }
 }

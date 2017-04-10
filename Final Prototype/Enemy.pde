@@ -17,8 +17,15 @@ class Enemy {
 
   //track the damage and death of the enemy
   int hitPoints;
+  //the enemy is hit once its life is down to zero while it completes its death animation
   boolean hit = false;
   boolean dead = false;
+  
+  //the number of points for killing the enemy
+  int scorePoints;
+
+  //record the last frame where the enemy was hit
+  int lastHit = -100;
 
   /*----------------------------------- Methods ----------------------------------------*/
 
@@ -38,21 +45,23 @@ class Enemy {
 
   //method to detect when the enemy hits the unicorn
   void hitUnicorn(Unicorn u) {
-    if (!u.getCrouched()) {
-      if (position.y + enemyHeight > u.getYPos() &&
-        position.y < u.getYPos() + u.getHeight() &&
-        position.x + enemyWidth > u.getXPos() &&
-        position.x < u.getXPos() + u.getWidth()) {
-        u.hit();
-      }
-    } else {
-      //adjust for smaller hitbox when unicorn is crouched
-      if (!u.getInvincible() &&
-        position.y + enemyHeight > u.getYPos() + u.getCrouchOffset() &&
-        position.y < u.getYPos() + u.getHeight() &&
-        position.x + enemyWidth > u.getXPos() &&
-        position.x < u.getXPos() + u.getWidth()) {
-        u.hit();
+    if (!hit) {
+      if (!u.getCrouched()) {
+        if (position.y + enemyHeight > u.getYPos() &&
+          position.y < u.getYPos() + u.getHeight() &&
+          position.x + enemyWidth > u.getXPos() &&
+          position.x < u.getXPos() + u.getWidth()) {
+          u.hit();
+        }
+      } else {
+        //adjust for smaller hitbox when unicorn is crouched
+        if (!u.getInvincible() &&
+          position.y + enemyHeight > u.getYPos() + u.getCrouchOffset() &&
+          position.y < u.getYPos() + u.getHeight() &&
+          position.x + enemyWidth > u.getXPos() &&
+          position.x < u.getXPos() + u.getWidth()) {
+          u.hit();
+        }
       }
     }
   }
@@ -62,8 +71,10 @@ class Enemy {
 
   void hit(int damage) {
     hitPoints -= damage;
+    lastHit = frameCount;
     if (hitPoints <= 0) {
-      dead = true;
+      hit = true;
+      system.game.setScore(system.game.getScore() + scorePoints);
     }
   }
 

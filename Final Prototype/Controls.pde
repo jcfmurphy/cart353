@@ -58,8 +58,26 @@ class Controls {
     //in-game keyPressed controls
     if (system.getShowGame()) {
       setKeys(true);
-      if (key == ' ' || key == ' ') {
+      if (key == ' ') {
         system.game.unicorn.jump();
+      }
+      if (system.game.getGameOver()) {
+        if (key == ENTER) {
+          system.startGame();
+        } else if (key == ' ') {
+          music.pause();
+          music.rewind();
+          system.setShowMenu(true);
+          system.setShowGame(false);
+        }
+      } else if (system.game.getEndLevel()) {
+        if (key == ENTER) {
+          //set the string to load the next level
+          system.game.setLevel(system.game.getLevel() + 1);
+          String levelString = "level" + system.game.getLevel() +".json";
+          system.game.setEndLevel(false);
+          system.game.loadMap(levelString);
+        }
       }
     }
     //editor keyPressed controls

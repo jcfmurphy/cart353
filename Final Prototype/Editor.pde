@@ -122,6 +122,25 @@ class Editor {
           g.setSprite(sprites[0]);
         }
       }
+    } else if (selectedSprite.getSpriteNum() == 6) {
+      //check all GridSquares
+      for (GridSquare g : gridSquares) {
+        //empty the GridSquare to the right of the one being filled
+        if (g.position.x == fillSquare.position.x + gridSize && g.position.y == fillSquare.position.y) {
+          g.setSprite(sprites[0]);
+        }
+      }
+    } else if (selectedSprite.getSpriteNum() == 8) {
+      //check all GridSquares
+      for (GridSquare g : gridSquares) {
+        //empty the GridSquares overlapping the rainbow door
+        if (g.position.x >= fillSquare.position.x &&
+          g.position.x < fillSquare.position.x + 3 * gridSize && 
+          g.position.y >= fillSquare.position.y &&
+          g.position.y < fillSquare.position.y + 3 * gridSize) {
+          g.setSprite(sprites[0]);
+        }
+      }
     } else {
       //Get the gridSquare above and check if it contains the unicorn sprite...
       if (mouseY >= 100) {

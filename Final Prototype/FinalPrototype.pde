@@ -32,6 +32,9 @@ AudioSample splash;
 AudioSample slimeSound;
 AudioSample deathGrunt;
 AudioSample arcSound;
+AudioSample slimeDeath;
+
+AudioPlayer music;
 
 //create an array of sprites
 Sprite[] sprites;
@@ -56,21 +59,22 @@ Controls controller;
 
 void setup() {
   size(1650, 1000);
-  
+
   //set the frameRate to 30 frames per second
   frameRate(30);
 
   //fill the sprite array
-  sprites = new Sprite[8];
-  sprites[0] = new Sprite(0, "empty.png");
-  sprites[1] = new Sprite(1, "UnicornIdleRight_000.png");
-  sprites[2] = new Sprite(2, "Platform.png");
-  sprites[3] = new Sprite(3, "Grass.png");
-  sprites[4] = new Sprite(4, "WaterTop.png");
-  sprites[5] = new Sprite(5, "WaterBottom.png");
-  sprites[6] = new Sprite(6, "SlimeIcon.png");
-  sprites[7] = new Sprite(7, "Dirt.png");
-  
+  sprites = new Sprite[9];
+  sprites[0] = new Sprite(0, "empty.png", "empty.png");
+  sprites[1] = new Sprite(1, "UnicornIdleRight_000.png", "UnicornIdleRight_000.png");
+  sprites[2] = new Sprite(2, "Platform.png", "Platform.png");
+  sprites[3] = new Sprite(3, "Grass.png", "Grass.png");
+  sprites[4] = new Sprite(4, "WaterTop.png", "WaterTop.png");
+  sprites[5] = new Sprite(5, "WaterBottom.png", "WaterBottom.png");
+  sprites[6] = new Sprite(6, "SlimeWalkLeft_000.png", "SlimeIcon.png");
+  sprites[7] = new Sprite(7, "Dirt.png", "Dirt.png");
+  sprites[8] = new Sprite(8, "RainbowDoor.png", "RainbowDoorIcon.png");
+
 
   //load buttonClick audio sample
   minim = new Minim(this);
@@ -82,6 +86,9 @@ void setup() {
   slimeSound = minim.loadSample("slimeSound.wav", 512);
   deathGrunt = minim.loadSample("deathGrunt.wav", 512);
   arcSound = minim.loadSample("arcSound.wav", 512);
+  slimeDeath = minim.loadSample("SlimeDeath.wav", 512);
+
+  music = minim.loadFile("music.wav");
 
   //set the selected sprite
   selectedSprite = sprites[0];

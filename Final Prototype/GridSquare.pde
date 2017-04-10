@@ -43,12 +43,12 @@ class GridSquare {
   void editorDisplay(int cameraOffset, int editorWidth) {
     if (position.x >= cameraOffset && position.x < cameraOffset + editorWidth) {
       //display the stored sprite
-      sprite.display(position.x, position.y);
+      sprite.displayImage(position.x, position.y);
 
       //if the mouse is over this gridSquare, display the selected sprite over the stored one
       if (mouseX - system.editor.origin.x + cameraOffset >= position.x && mouseX - system.editor.origin.x + cameraOffset < position.x + gridSize &&
         mouseY >= position.y && mouseY < position.y + gridSize) {
-        selectedSprite.display(position.x, position.y);
+        selectedSprite.displayImage(position.x, position.y);
       }
     }
   }
@@ -57,7 +57,7 @@ class GridSquare {
   void gameDisplay(int cameraOffset, int gameWidth) {
     if (position.x >= cameraOffset - 100 && position.x < cameraOffset + gameWidth) {
       //display the stored sprite
-      sprite.display(position.x, position.y);
+      sprite.displayImage(position.x, position.y);
     }
   }
 

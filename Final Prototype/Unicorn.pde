@@ -88,31 +88,17 @@ class Unicorn {
       
       currentState.display(stateFrame, position.x, position.y);
       
-      //PImage currentImage = currentState.getFrame(stateFrame);
-      //if (currentState == walkRight) {
-      //  image(currentImage, position.x - 40, position.y - 10);
-      //} else if (!faceRight && currentState != crouchLeft) {
-      //  image(currentImage, position.x - 45, position.y - 10);
-      //} else if (currentState == hitRight) {
-      //  image(currentImage, position.x - 100, position.y - 10);
-      //} else if (currentState == crouchRight) {
-      //  image(currentImage, position.x - 20, position.y + 28);
-      //} else if (currentState == crouchLeft) {
-      //  image(currentImage, position.x - 55, position.y + 28);
-      //} else {
-      //  image(currentImage, position.x - 10, position.y - 10);
-      //}
     }
 
     //show hitbox for testing
-    stroke(0);
-    strokeWeight(1);
-    fill(255, 0, 0, 100);
-    if (!crouched) {
-      rect(position.x, position.y, unicornWidth, unicornHeight);
-    } else {
-      rect(position.x, position.y + crouchOffset, unicornWidth, unicornHeight - crouchOffset);
-    }
+    //stroke(0);
+    //strokeWeight(1);
+    //fill(255, 0, 0, 100);
+    //if (!crouched) {
+    //  rect(position.x, position.y, unicornWidth, unicornHeight);
+    //} else {
+    //  rect(position.x, position.y + crouchOffset, unicornWidth, unicornHeight - crouchOffset);
+    //}
   }
 
 
@@ -198,7 +184,7 @@ class Unicorn {
       }
     }
 
-    //the the state has changed from last frame, then set the stateFrame back to zero
+    //if the state has changed from last frame, then set the stateFrame back to zero
     if (currentState != newState) {
       currentState = newState;
       stateFrame = 0;
@@ -512,7 +498,7 @@ class Unicorn {
   }
 
   void die() {
-    lives--;
+    system.game.setLives(system.game.getLives() - 1);
     hit = false;
     invincible = true;
     invincibleFrame = frameCount;
@@ -524,7 +510,7 @@ class Unicorn {
     velocity.y = 0;
 
     //game over if no remaining lives
-    if (lives <= 0) {
+    if (system.game.getLives() <= 0) {
       system.game.setGameOver(true);
     }
   }
@@ -569,10 +555,6 @@ class Unicorn {
 
   int getHeight() {
     return unicornHeight;
-  }
-
-  int getLives() {
-    return lives;
   }
 
   boolean getFaceRight() {

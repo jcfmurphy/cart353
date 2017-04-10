@@ -34,8 +34,8 @@ class Button {
   Button(float x, float y, Sprite sprite) {
     position = new PVector (x, y);
     buttonWidth = 150;
-    buttonHeight = sprite.spriteImage.height + 50;
-    buttonImage = sprite.spriteImage;
+    buttonHeight = sprite.spriteIcon.height + 50;
+    buttonImage = sprite.spriteIcon;
     spriteButton = true;
   }
 

@@ -47,7 +47,7 @@ class EditorHud {
 
 
     //fill buttons arrays
-    spriteButtons = new Button[8];
+    spriteButtons = new Button[9];
     spriteButtons[0] = new Button(0, 0, 150, 150, erase);
     spriteButtons[1] = new Button(0, 150, sprites[1]);
     spriteButtons[2] = new Button(0, 400, sprites[2]);
@@ -56,6 +56,7 @@ class EditorHud {
     spriteButtons[5] = new Button(0, 850, sprites[5]);
     spriteButtons[6] = new Button(0, 1000, sprites[6]);
     spriteButtons[7] = new Button(0, 1100, sprites[7]);
+    spriteButtons[8] = new Button(0, 1250, sprites[8]);
 
     controlButtons = new Button[6];
     controlButtons[0] = new Button(hudWidth, 0, 50, height, left);

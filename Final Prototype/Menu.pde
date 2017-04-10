@@ -6,17 +6,20 @@ class Menu {
   //stores the transparency of a black layer that fades to reveal the title screen
   int transparency = 255;
   //the menu buttons
-  Button[] buttons = new Button[3];
-  //the unicorn image
+  Button[] buttons = new Button[2];
+  //the images
   PImage unicorn = loadImage("UnicornTitle.png");
+  PImage title = loadImage("Title.png");
 
   /*--------------------------------- Constructors -------------------------------------*/
 
   //Constructor for creating a new menu
   Menu() {
-    buttons[0] = new Button(width * 0.75 - 300, 400, 600, 100, "Play Game");
-    buttons[1] = new Button(width * 0.75 - 300, 600, 600, 100, "Editor");
-    buttons[2] = new Button(width * 0.75 - 300, 800, 600, 100, "Instructions");
+    buttons[0] = new Button(width * 0.5, 500, 600, 100, "Play Game");
+    buttons[1] = new Button(width * 0.5, 700, 600, 100, "Level Editor");
+    //buttons[2] = new Button(width * 0.5, 800, 600, 100, "Instructions");
+    
+    title.resize(1600, 370);
     
   }
 
@@ -28,6 +31,7 @@ class Menu {
     
     imageMode(CENTER);
     image(unicorn, width * 0.25, height * 0.65);
+    image(title, width * 0.5, 200);
         
     //draw the buttons
     for (Button b : buttons) {

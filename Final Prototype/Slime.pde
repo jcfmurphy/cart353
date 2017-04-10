@@ -7,6 +7,10 @@ class Slime extends Enemy {
   //variables to track the action state of the slime
   State walkRight = new State("SlimeWalkRight", 60, -10, -20, 140, 20);
   State walkLeft = new State("SlimeWalkLeft", 60, -25, -20, 20, 20);
+  State rWalkRight = new State("RSlimeWalkRight", 60, -10, -20, 140, 20);
+  State rWalkLeft = new State("RSlimeWalkLeft", 60, -25, -20, 20, 20);
+  State hitRight = new State("RSlimeHitRight", 60, -10, -88, 140, 20);
+  State hitLeft = new State("RSlimeHitLeft", 60, -25, -88, 20, 20);
   State currentState;
   int stateFrame;
 
@@ -24,6 +28,7 @@ class Slime extends Enemy {
     enemyWidth = 160;
     enemyHeight = 80;
     hitPoints = 3;
+    scorePoints = 500;
     nextShot = int(random(120, 180));
   }
 
@@ -41,6 +46,8 @@ class Slime extends Enemy {
       //resolve y-movement, checking for obstacles
       resolveY();
 
+      updateState();
+
       if (nextShot == frameCount) {
         shoot();
       }
@@ -51,18 +58,56 @@ class Slime extends Enemy {
     }
   }
 
+  //manages the slime's animation states 
+  void updateState() {
+    //boolean to store the store the state determined this frame and compare to the previous frame
+    State newState;
+
+    //logic to find the state as of this frame
+    if (hit) {
+      if (faceRight) {
+        newState = hitRight;
+      } else {
+        newState = hitLeft;
+      }
+    } else {
+      if (frameCount - lastHit < 5) {
+        if (faceRight) {
+          newState = rWalkRight;
+        } else {
+          newState = rWalkLeft;
+        }
+      } else {
+        if (faceRight) {
+          newState = walkRight;
+        } else {
+          newState = walkLeft;
+        }
+      }
+    }
+
+    //set the stateFrame back to zero immediately after the slime has been hit to zero life
+    if (hit && currentState != hitRight && currentState != hitLeft) {
+      stateFrame = 0;
+      slimeDeath.trigger();
+    } else {
+      stateFrame++;
+    }
+
+    currentState = newState;
+
+    //if the slime has reached the end of its death animation, then it dies
+    if (hit && stateFrame == 60) {
+      dead = true;
+    }
+  }
+
+
 
   //method to draw the Slime in different states
   void display() {    
 
     currentState.display(stateFrame, position.x, position.y);
-
-    //PImage currentImage = currentState.getFrame(stateFrame);
-    //if (faceRight) {
-    //  image(currentImage, position.x - 10, position.y - 20);
-    //} else {
-    //  image(currentImage, position.x - 25, position.y - 20);
-    //}
 
     stateFrame++;
 
@@ -101,7 +146,6 @@ class Slime extends Enemy {
       if (barrier) {
         position.x = int(position.x + barrierDistance);
         faceRight = false;
-        currentState = walkLeft;
       } else {
         position.x += velocity.x;
       }
@@ -131,7 +175,6 @@ class Slime extends Enemy {
       if (barrier) {
         position.x = int(position.x + barrierDistance + 1);
         faceRight = true;
-        currentState = walkRight;
       } else {
         position.x -= velocity.x;
       }
@@ -168,10 +211,11 @@ class Slime extends Enemy {
   }
 
   void shoot() {
+    if (!hit) {
+      system.game.projectiles.add(new SlimeShot(position.x + currentState.getGunOffsetX(), position.y + currentState.getGunOffsetY(), faceRight));
 
-    system.game.projectiles.add(new SlimeShot(position.x + currentState.getGunOffsetX(), position.y + currentState.getGunOffsetY(), faceRight));
-
-    slimeSound.trigger();
+      slimeSound.trigger();
+    }
   }
 
   void hit(int damage) {
