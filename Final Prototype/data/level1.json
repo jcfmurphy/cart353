@@ -2490,12 +2490,12 @@
     "y": 700
   },
   {
-    "spriteNum": 3,
+    "spriteNum": 0,
     "x": 4900,
     "y": 800
   },
   {
-    "spriteNum": 7,
+    "spriteNum": 0,
     "x": 4900,
     "y": 900
   },
@@ -2540,12 +2540,12 @@
     "y": 700
   },
   {
-    "spriteNum": 3,
+    "spriteNum": 0,
     "x": 5000,
     "y": 800
   },
   {
-    "spriteNum": 7,
+    "spriteNum": 0,
     "x": 5000,
     "y": 900
   },
@@ -2590,12 +2590,12 @@
     "y": 700
   },
   {
-    "spriteNum": 3,
+    "spriteNum": 0,
     "x": 5100,
     "y": 800
   },
   {
-    "spriteNum": 7,
+    "spriteNum": 0,
     "x": 5100,
     "y": 900
   },
