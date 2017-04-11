@@ -1,12 +1,19 @@
 
 /*
-This is the prototype for the Ammunicorn Level Builder.
+This is the final prototype for AmmUnicorn 
+ 
+ Level Editor:
  Use the mouse to select tiles and place them in the editor grid.
  Press the 's' key to save the map as a JSON file.
  The up key extends the map to the right.
  The down key cuts off a map column on the right.
  The left key moves the map camera left.
  The right key moves the map camera right.
+ 
+ Game:
+ Use WASD keys to move
+ SPACE to jump
+ Mouse-click to shoot
  */
 
 
