@@ -29,7 +29,7 @@ class Slime extends Enemy {
     enemyHeight = 80;
     hitPoints = 3;
     scorePoints = 500;
-    nextShot = int(random(120, 180));
+    nextShot = frameCount + int(random(120, 180));
   }
 
 
