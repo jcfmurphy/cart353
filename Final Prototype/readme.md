@@ -1,2 +1,15 @@
 
 Due to the the large number of data files in this project, it will probably easier to download the .zip file (FinalPrototypeZip.zip), which contians the entire sketch.
+
+
+Artist’s Statement – Joshua Murphy
+
+While Internet Ugly is the aesthetic of mundaneness, “Internet Awesome” aspires to raise memetic culture to epic proportions with highly-stylized visuals and unabashed post-ironic valorization of subjects cherished by “the Internet” (e.g. unicorns, cats, Teddy Roosevelt). While the Internet has fractured popular culture, Internet Awesome acts as a small force of cultural unification by elevating and embracing these widely-beloved subjects. Popular works in this genre include Nyan Cat (saraj00n), Kung Fury (Sandberg), and Jason Heuser’s series of Presidential portraits.
+
+Inspired by Internet Awesome and 8-bit aesthetics, AmmUnicorn is a side-scrolling run-and-gun video game in which one plays as a unicorn fighting a variety of monsters with an arsenal of rainbow-based weapons. Like many works of Internet Awesome, Ammunicorn aspires to a hedonistic embrace of retro nostalgia and appropriation. Ammunicorn comes with a level-editor and open source code, allowing users to modify, expand upon, and subvert the game in much the same way as the memes that were the game’s inspiration.
+
+AmmUnicorn’s gameplay and mechanics are reminiscent of the arcade shooters of my youth, including Contra and Metal Slug. The game was also inspired by Super 3D Noah’s Ark, which attempted to draw Christian audiences by reskinning Wolfenstein 3D as a game about feeding animals in a bible story. By appropriating an antithetical intellectual property, the game undermined its own attempt to whitewash the violence. AmmUnicorn eschews bullets for rainbows, but it mocks its own self-censorship by having the enemies die violently anyway. The game owes too much to its predecessors to avoid the criticisms that they faced.
+
+I started this project believing that the homage aspect of AmmUnicorn would lighten the workload involved. Instead, I discovered that imitation imposes its own burdens. Modern software tools and libraries make it easier to build digital games today, but the technological constraints of the 8-bit era were integral in forming its aesthetic. I have realized that the solutions of today appear too smooth to suit my purpose, and I must research further into the practices and tools of the time in order to evoke my desired aesthetic. 
+
+I also underestimated the amount of time required to produce sprites that live up to the Internet Awesome label. My prior work with procedural animation did not prepare me for the fact that simply drawing decent-looking curves can be difficult when done by hand in a 100 X 100 pixel tile. This iteration of AmmUnicorn is incomplete because it lacks the visual density necessary for Internet Awesomeness. Future iterations will be focused on including more enemies, weapons, and power-ups so that the game may achieve my initial aspirations.
