@@ -54,8 +54,6 @@ class Menu {
       system.startGame();
     } else if (buttons[1].mouseInButton()) {
       system.startEditor();
-    } else if (buttons[2].mouseInButton()) {
-      
     }
   }
     
